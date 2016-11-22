@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:text="title"
+        android:id="@+id/tv_item_audio_title"
+        style="@style/item_title_style"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <ImageView
+            android:id="@+id/iv_item_audio_image"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:scaleType="fitXY"
+            android:id="@+id/ib_item_audio_play"
+            android:background="@null"
+            android:layout_centerInParent="true"
+            android:src="@drawable/center_collect_play"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_marginRight="18dp"
+            android:id="@+id/tv_item_audio_hate"
+            android:layout_alignParentRight="true"
+            android:textSize="18sp"
+            android:textColor="#aa000000"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_marginRight="18dp"
+            android:layout_toLeftOf="@id/tv_item_audio_hate"
+            android:src="@drawable/icon_discover_normal"
+            android:id="@+id/iv_item_audio_hate"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/tv_item_audio_love"
+            android:layout_marginRight="20dp"
+            android:textSize="18sp"
+            android:textColor="#aa000000"
+            android:layout_toLeftOf="@id/iv_item_audio_hate"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_marginRight="18dp"
+            android:layout_toLeftOf="@id/tv_item_audio_love"
+            android:src="@drawable/icon_discover_normal"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
