@@ -14,8 +14,10 @@ import android.widget.Toast;
 import com.w4lr.handmovie.R;
 import com.w4lr.handmovie.adapter.BaisiAdapter;
 import com.w4lr.handmovie.base.BaisiContract;
-import com.w4lr.handmovie.bean.BaisiResult;
+import com.w4lr.handmovie.bean.BaisiResult.ShowapiResBodyBean.PagebeanBean.ContentlistBean;
 import com.w4lr.handmovie.presenter.BaisiPresenter;
+
+import java.util.List;
 
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
@@ -31,6 +33,7 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
     private SwipeRefreshLayout srl;
 
     private BaisiPresenter mPresenter;
+
     private BaisiAdapter mAdapter;
 
     @Nullable
@@ -38,7 +41,6 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_baisi,null);
         initViews(view);
-        mPresenter.start(false);
         mPresenter.start(true);
         return view;
     }
@@ -66,9 +68,8 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
     }
 
     @Override
-    public void showResult(BaisiResult result) {
-        mAdapter = new BaisiAdapter(
-                getContext(),result.getShowapi_res_body().getPagebean().getContentlist());
+    public void showResult(List<ContentlistBean> result) {
+        mAdapter = new BaisiAdapter(getContext(),result);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(manager);
         rv.setAdapter(mAdapter);

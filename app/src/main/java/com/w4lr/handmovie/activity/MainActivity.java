@@ -1,7 +1,8 @@
-package com.w4lr.handmovie;
+package com.w4lr.handmovie.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,8 +11,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.w4lr.handmovie.R;
 import com.w4lr.handmovie.adapter.MainPagerAdapter;
+import com.w4lr.handmovie.util.StatusBarCompat;
+import com.w4lr.handmovie.util.UiUtils;
 
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
@@ -26,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initViews();
+
+        UiUtils.setStatusBarColor(this, Color.WHITE);
+
 
         if (Build.VERSION.SDK_INT >= 23) {
             //申请权限

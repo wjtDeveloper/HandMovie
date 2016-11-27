@@ -1,6 +1,7 @@
 package com.w4lr.handmovie.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.w4lr.handmovie.R;
+import com.w4lr.handmovie.activity.PhotoActivity;
 import com.w4lr.handmovie.bean.BaisiResult.ShowapiResBodyBean.PagebeanBean.ContentlistBean;
 import com.w4lr.handmovie.util.Glides;
 
@@ -82,11 +84,10 @@ public class BaisiAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = getItemViewType(position);
-        ContentlistBean data = mDataSets.get(position);
-        Log.e(TAG, "onBindViewHolder: type = " + type);
+        final ContentlistBean data = mDataSets.get(position);
+
         //填充公共数据
         BaisiHolder baisiHolder = (BaisiHolder) holder;
-        baisiHolder.setData(data);
 
         Glides.loadBitmap(data.getProfile_image(),baisiHolder.mProfileImage);
         baisiHolder.mLove.setText(data.getLove());
@@ -125,7 +126,16 @@ public class BaisiAdapter extends RecyclerView.Adapter {
                         data.getText());
                 break;
             case TYPE_IMAGE:
-                Glides.loadBitmap(data.getImage0(),baisiHolder.mImage);
+                Glides.loadBitmap(data.getImage1(),baisiHolder.mImage);
+                baisiHolder.mImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String imageUrl = data.getImage3();
+                        Intent intent = new Intent(mContext,PhotoActivity.class);
+                        intent.putExtra("image_url",imageUrl);
+                        mContext.startActivity(intent);
+                    }
+                });
                 break;
             case TYPE_DUANZI:
                 baisiHolder.mText.setText(data.getText());
@@ -150,8 +160,6 @@ public class BaisiAdapter extends RecyclerView.Adapter {
         private TextView mProfileName;
         private JCVideoPlayerStandard mPlayer;
 
-        private ContentlistBean mItemData;
-
         public BaisiHolder(View itemView) {
             super(itemView);
             mText = (TextView) itemView.findViewById(R.id.tv_item_baisi_text);
@@ -161,33 +169,6 @@ public class BaisiAdapter extends RecyclerView.Adapter {
             mProfileImage = (ImageView) itemView.findViewById(R.id.iv_baisi_profile_image);
             mProfileName = (TextView) itemView.findViewById(R.id.tv_baisi_profile_name);
             mPlayer = (JCVideoPlayerStandard) itemView.findViewById(R.id.jc_item_baisi);
-//            initListener();
-        }
-
-        public void setData(ContentlistBean data) {
-            mItemData = data;
-        }
-
-        private void initListener() {
-//            //播放按钮的监听
-//            mPlayer.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (mItemData.getVideo_uri() != null) {
-//                        //视频类型
-//                        Log.e(TAG, "onClick: audio url = " + mItemData.getVideo_uri());
-//                        mPlayer.setUp(mItemData.getVideo_uri(),JCVideoPlayer.SCREEN_LAYOUT_LIST,
-//                                mItemData.getText());
-//                    } else {
-//                        //音频类型
-//                        Log.e(TAG, "onClick: audio url = " + mItemData.getVoiceuri());
-//                        mPlayer.setUp(mItemData.getVoiceuri(),JCVideoPlayer.SCREEN_LAYOUT_LIST,
-//                                mItemData.getText());
-//                    }
-//                    mPlayer.startButton.performClick();
-//
-//                }
-//            });
         }
 
     }

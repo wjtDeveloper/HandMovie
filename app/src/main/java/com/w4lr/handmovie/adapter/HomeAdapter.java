@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.w4lr.handmovie.R;
 import com.w4lr.handmovie.bean.HomeResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,40 +19,74 @@ import java.util.List;
  */
 public class HomeAdapter extends RecyclerView.Adapter {
 
+    private static final int TYPE_NORMAL = 0;
+
+    private static final int TYPE_LOADMORE = 1;
+
     private Context mContext;
 
     private List<HomeResult.SubjectsBean> mDataSets;
+
+    private OnLoadMoreListener mOnLoadMoreListener;
 
     public HomeAdapter(Context context, List<HomeResult.SubjectsBean> dataSets) {
         mContext = context;
         mDataSets = dataSets;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position < mDataSets.size()) {
+            return TYPE_NORMAL;
+        } else {
+            return TYPE_LOADMORE;
+        }
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(mContext, R.layout.item_home,null);
-        HomeHolder holder = new HomeHolder(view);
+        RecyclerView.ViewHolder holder = null;
+        if (viewType == TYPE_NORMAL) {
+            View view = View.inflate(mContext, R.layout.item_home, null);
+            holder = new HomeHolder(view);
+        } else {
+            View view = View.inflate(mContext,R.layout.layout_loadmore,null);
+            holder = new LoadMoreHolder(view);
+        }
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        HomeResult.SubjectsBean subject = mDataSets.get(position);
-        HomeHolder homeHolder = (HomeHolder) holder;
-        //显示数据
-        Glide.with(mContext)
-                .load(subject.getImages().getSmall())
-                .placeholder(R.drawable.video_default)
-                .error(R.drawable.video_default)
-                .into(homeHolder.ivIcon);
-        homeHolder.tvTitle.setText(subject.getTitle());
-        homeHolder.tvYear.setText(subject.getYear());
+        int type = getItemViewType(position);
+        if (type == TYPE_NORMAL) {
+            HomeResult.SubjectsBean subject = mDataSets.get(position);
+            HomeHolder homeHolder = (HomeHolder) holder;
+            //显示数据
+            Glide.with(mContext)
+                    .load(subject.getImages().getSmall())
+                    .placeholder(R.drawable.video_default)
+                    .error(R.drawable.video_default)
+                    .into(homeHolder.ivIcon);
+            homeHolder.tvTitle.setText(subject.getTitle());
+            homeHolder.tvYear.setText(subject.getYear());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mDataSets.size();
+        return mDataSets.size() + 1;
+    }
+
+    /*
+     * 刷新数据
+     */
+    public void refreshData(List<HomeResult.SubjectsBean> subjects) {
+        if (mDataSets == null) {
+            mDataSets = new ArrayList<>();
+        }
+        mDataSets.addAll(subjects);
+        notifyItemRangeChanged(mDataSets.size(),subjects.size());
     }
 
     class HomeHolder extends RecyclerView.ViewHolder {
@@ -67,6 +102,30 @@ public class HomeAdapter extends RecyclerView.Adapter {
             tvYear = (TextView) itemView.findViewById(R.id.tv_item_home_year);
         }
 
+    }
+
+    class LoadMoreHolder extends RecyclerView.ViewHolder {
+
+        public LoadMoreHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                }
+            });
+        }
+    }
+
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener l ) {
+        mOnLoadMoreListener = l;
     }
 
 }

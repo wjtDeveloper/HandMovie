@@ -2,6 +2,10 @@ package com.w4lr.handmovie.base;
 
 import android.view.View;
 
+import com.w4lr.handmovie.bean.BaisiResult;
+
+import java.util.List;
+
 /**
  * Created by w4lr on 2016/11/19.
  */
@@ -16,7 +20,11 @@ public interface BaseView<T,R> {
      */
     void setPresenter(T presenter);
 
-    void showResult(R result);
+    /**
+     * 显示数据
+     * @param result
+     */
+    void showResult(List<R> result);
 
     void startLoading();
 

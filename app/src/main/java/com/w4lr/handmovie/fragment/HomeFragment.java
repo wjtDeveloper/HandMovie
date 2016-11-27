@@ -3,7 +3,6 @@ package com.w4lr.handmovie.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +26,7 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment implements HomeContract.View {
 
+    private static final String TAG = "HomeFragment";
     /**
      * 悬浮按钮
      */
@@ -41,13 +41,14 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     private RecyclerView rv;
     private HomeAdapter mAdapter;
 
+    private boolean isLoading = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_home,null);
         initViews(view);
         initListener();
-        mPresenter.start(false);
         mPresenter.start(true);
         return view;
     }
@@ -58,7 +59,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
      */
     @Override
     public void initViews(View view) {
-        fab = (FloatingActionButton) view.findViewById(R.id.fab_home);
         srl = (SwipeRefreshLayout) view.findViewById(R.id.srl_home);
         rv = (RecyclerView) view.findViewById(R.id.rv_home);
     }
@@ -75,6 +75,12 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         });
     }
 
+    private void loadMore() {
+        if (!isLoading) {
+            mPresenter.loadMore();
+        }
+    }
+
     @Override
     public void setPresenter(HomePresenter presenter) {
         mPresenter = presenter;
@@ -82,10 +88,22 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void showResult(List<HomeResult.SubjectsBean> subjects) {
-        mAdapter = new HomeAdapter(getContext(),subjects);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(layoutManager);
-        rv.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            //数据第一次加载或刷新的数据
+            mAdapter = new HomeAdapter(getContext(),subjects);
+            mAdapter.setOnLoadMoreListener(new HomeAdapter.OnLoadMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    loadMore();
+                }
+            });
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            rv.setLayoutManager(layoutManager);
+            rv.setAdapter(mAdapter);
+        } else {
+            mAdapter.refreshData(subjects);
+        }
+
     }
 
 
@@ -111,19 +129,11 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void showError(String error) {
-//        Snackbar.make(fab,error,Snackbar.LENGTH_SHORT).show();
         Toast.makeText(getContext(),error,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showNetWorkError() {
-//        Snackbar.make(getView(),"网络错误",Snackbar.LENGTH_INDEFINITE)
-//                .setAction("设置", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                          mPresenter.goSetting();
-//                    }
-//                });
         Toast.makeText(getContext(),"网络不可用",Toast.LENGTH_SHORT).show();
     }
 

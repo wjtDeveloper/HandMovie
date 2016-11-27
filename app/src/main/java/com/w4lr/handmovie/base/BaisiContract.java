@@ -1,6 +1,7 @@
 package com.w4lr.handmovie.base;
 
 import com.w4lr.handmovie.bean.BaisiResult;
+import com.w4lr.handmovie.model.BaisiModelImpl;
 import com.w4lr.handmovie.presenter.BaisiPresenter;
 
 /**
@@ -9,7 +10,7 @@ import com.w4lr.handmovie.presenter.BaisiPresenter;
 
 public interface BaisiContract {
 
-    public interface View extends BaseView<BaisiPresenter,BaisiResult> {
+    public interface View extends BaseView<BaisiPresenter,BaisiResult.ShowapiResBodyBean.PagebeanBean.ContentlistBean> {
         /**
          * 显示单项的详情页
          */
@@ -19,8 +20,10 @@ public interface BaisiContract {
     /**
      * 加载更多
      */
-    public interface Presenter extends BasePresenter {
-        void loadMore();
+    public static abstract class Presenter extends BasePresenter<BaisiResult,BaisiModelImpl> {
+
+        public abstract void loadMore();
+
     }
 
 }
