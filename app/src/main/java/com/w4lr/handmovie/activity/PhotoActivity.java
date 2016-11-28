@@ -1,6 +1,5 @@
 package com.w4lr.handmovie.activity;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -8,9 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +20,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.w4lr.handmovie.R;
 
 /**
@@ -32,10 +32,13 @@ public class PhotoActivity extends BaseActivity {
 
     private ProgressBar pbPhoto;
 
+    private Toolbar mToolbar;
+
+    private boolean isShowStatusAndActionBar = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initData();
     }
 
@@ -43,10 +46,20 @@ public class PhotoActivity extends BaseActivity {
      * 加载界面数据
      */
     private void initData() {
+        mToolbar.setTitle("图片");
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+//        setSupportActionBar(mToolbar);
 
         //获取传递过来的数据
         String imageUrl = getIntent().getStringExtra("image_url");
         getScreenWidth();
+
 
         Glide.with(this)
                 .load(imageUrl)
@@ -108,6 +121,34 @@ public class PhotoActivity extends BaseActivity {
         imageView = (SubsamplingScaleImageView) findViewById(R.id.imageView);
         pbPhoto = (ProgressBar) findViewById(R.id.pb_photo);
         pbPhoto.setVisibility(View.VISIBLE);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        imageView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                return false;
+//            }
+//        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeStatusBarAndActionBar();
+            }
+        });
+    }
+
+    /**
+     * 显示或隐藏 状态栏与ToolBar
+     */
+    private void changeStatusBarAndActionBar() {
+        if (isShowStatusAndActionBar) {
+            mToolbar.setVisibility(View.GONE);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            mToolbar.setVisibility(View.VISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        isShowStatusAndActionBar = !isShowStatusAndActionBar;
     }
 
     private void getScreenWidth() {

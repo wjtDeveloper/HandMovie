@@ -126,7 +126,7 @@ public class BaisiAdapter extends RecyclerView.Adapter {
                         data.getText());
                 break;
             case TYPE_IMAGE:
-                Glides.loadBitmap(data.getImage1(),baisiHolder.mImage);
+                Glides.loadBitmap(data.getImage0(),baisiHolder.mImage);
                 baisiHolder.mImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -33,13 +33,13 @@
             <ImageView
                 android:id="@+id/iv_item_baisi_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"/>
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"/>
 
             <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
                 android:id="@+id/jc_item_baisi"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"/>
+                android:layout_height="200dp"/>
 
         </RelativeLayout>
 
