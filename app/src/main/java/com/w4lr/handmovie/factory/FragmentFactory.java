@@ -2,7 +2,7 @@ package com.w4lr.handmovie.factory;
 
 import android.support.v4.app.Fragment;
 
-import com.w4lr.handmovie.fragment.ForecastFragment;
+import com.w4lr.handmovie.fragment.SettingFragment;
 import com.w4lr.handmovie.fragment.HomeFragment;
 import com.w4lr.handmovie.fragment.BaisiFragment;
 
@@ -43,7 +43,7 @@ public class FragmentFactory  {
         } else if (type == TYPE_BAISI) {
             return new BaisiFragment();
         } else if (type == TYPE_FROECAST) {
-            return new ForecastFragment();
+            return new SettingFragment();
         } else {
             throw new RuntimeException("You must input a right type of fragment");
         }
