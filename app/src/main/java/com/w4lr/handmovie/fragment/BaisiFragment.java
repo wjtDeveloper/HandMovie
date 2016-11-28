@@ -2,10 +2,12 @@ package com.w4lr.handmovie.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +38,13 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
 
     private BaisiAdapter mAdapter;
 
+    private FloatingActionButton fab;
+    private LinearLayoutManager mManager;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_baisi,null);
+        View view = View.inflate(getContext(), R.layout.fragment_baisi, null);
         initViews(view);
         mPresenter.start(true);
         return view;
@@ -60,6 +65,14 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
                 mPresenter.loadMore();
             }
         });
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rv.smoothScrollToPosition(0);
+                Log.e("TAG", "onClick: ");
+            }
+        });
     }
 
     @Override
@@ -69,9 +82,9 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
 
     @Override
     public void showResult(List<ContentlistBean> result) {
-        mAdapter = new BaisiAdapter(getContext(),result);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(manager);
+        mAdapter = new BaisiAdapter(getContext(), result);
+        mManager = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(mManager);
         rv.setAdapter(mAdapter);
     }
 
@@ -97,12 +110,12 @@ public class BaisiFragment extends Fragment implements BaisiContract.View {
 
     @Override
     public void showError(String error) {
-        Toast.makeText(getContext(),error,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showNetWorkError() {
-        Toast.makeText(getContext(),"网络错误",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "网络错误", Toast.LENGTH_SHORT).show();
     }
 
     @Override
